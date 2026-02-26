@@ -10,10 +10,24 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref<User | null>(null)
     const loading = ref(false)
     const error = ref<string | null>(null)
+    const initialized = ref(false)
 
 
     // Computed property to check if user is authenticated
     const isAuthenticated = computed(() => !!user.value)
+
+    // Initialize auth state (e.g., check for existing session)
+    async function initialize() {
+      if (initialized.value) return
+      try {
+        const { data } = await authApi.me()
+        user.value = data
+      } catch {
+        user.value = null
+      } finally {
+        initialized.value = true
+      }
+    }
 
     // Register a new user
     async function register(username: string, email: string, password: string){
@@ -47,6 +61,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
 
+    // Logout function
+    async function logout() {
+      await authApi.logout() // Call API to invalidate session/token if needed
+      user.value = null // Clear user state
+    }
+
 
     // Clear error
     function clearError(){
@@ -68,5 +88,7 @@ export const useAuthStore = defineStore('auth', () => {
     clearError,
     register,
     login,
+    logout,
+    initialize
   }
 })

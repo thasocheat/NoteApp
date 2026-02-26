@@ -11,4 +11,12 @@ export const authApi = {
     // Login a user
     login: (data: { email: string; password: string }) =>
         api.post<User>('/auth/login', data),
+
+    // Logout a user
+    logout: () =>
+        api.post('/auth/logout'),
+
+    // Get current authenticated user
+    me: () =>
+        api.get<User>('/auth/me'),
 }
