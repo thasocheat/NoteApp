@@ -15,23 +15,23 @@ Or
 ### Screenshots
 
 <p align="center">
-  <img src="Demo%20videos%20and%20imgages/1.jpg" width="45%">
-  <img src="Demo%20videos%20and%20imgages/2.jpg" width="45%">
+  <img src="Demo%20and%20images/1.jpg" width="45%">
+  <img src="Demo%20and%20images/2.jpg" width="45%">
 </p>
 
 <p align="center">
-  <img src="Demo%20videos%20and%20imgages/3.jpg" width="45%">
-  <img src="Demo%20videos%20and%20imgages/4.jpg" width="45%">
+  <img src="Demo%20and%20images/3.jpg" width="45%">
+  <img src="Demo%20and%20images/4.jpg" width="45%">
 </p>
 
 <p align="center">
-  <img src="Demo%20videos%20and%20imgages/5.jpg" width="45%">
-  <img src="Demo%20videos%20and%20imgages/6.jpg" width="45%">
+  <img src="Demo%20and%20images/5.jpg" width="45%">
+  <img src="Demo%20and%20images/6.jpg" width="45%">
 </p>
 
 <p align="center">
-  <img src="Demo%20videos%20and%20imgages/7.jpg" width="45%">
-  <img src="Demo%20videos%20and%20imgages/8.jpg" width="45%">
+  <img src="Demo%20and%20images/7.jpg" width="45%">
+  <img src="Demo%20and%20images/8.jpg" width="45%">
 </p>
 
 
