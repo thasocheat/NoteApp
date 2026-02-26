@@ -5,7 +5,8 @@ import type { Note, NotesQuery } from '@/types'
 export const notesApi = {
     // Get all notes with optional query parameters
     getAll: (params?: NotesQuery) =>
-        api.get<Note[]>('/notes',),
+        // Pass query parameters for filtering and sorting when fetching notes
+        api.get<Note[]>('/notes', { params }),
 
     // Get a single note by ID
     getById: (id: string) =>

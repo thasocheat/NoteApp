@@ -99,7 +99,7 @@
           </form>
 
           <!-- Register -->
-          <form v-else key="register" @submit.prevent="handleRegister()">
+          <form v-else key="register" @submit.prevent="handleRegister">
 
             <!-- Header -->
             <div class="auth-form-header">
@@ -123,7 +123,7 @@
             <div class="auth-field">
               <label class="auth-label">Password</label>
               <input v-model="registerForm.password" type="password" required autocomplete="new-password"
-                placeholder="••••••••" class="auth-input" />
+                placeholder="Min. 6 characters" class="auth-input" />
             </div>
 
             <!-- password strength bar -->
@@ -221,9 +221,12 @@ async function handleRegister(){
     await authStore.register(registerForm.username, registerForm.email, registerForm.password)
     router.push('/notes')
   }catch(e){
-    console.error(e)
+    console.log(e)
   }
 }
+
+
+
 
 // compute password strength (0-4)
 const passwordStrength = computed(() => {

@@ -31,7 +31,7 @@ public class AuthService : IAuthService
         var user = new User
         {
             Username = request.Username.Trim(),
-            Email = request.Email.Trim(),
+            Email = request.Email.Trim().ToLowerInvariant(),
             Password = PasswordHelper.Hash(request.Password)
         };
 

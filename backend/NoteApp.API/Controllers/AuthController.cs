@@ -90,7 +90,7 @@ public class AuthController : ControllerBase
 
     // POST: api/auth/Logout
     [HttpPost("Logout")]
-    public IActionResult Logou()
+    public IActionResult Logout()
     {
         // Clear the authentication cookie to log the user out
         Response.Cookies.Delete("auth_token", new CookieOptions

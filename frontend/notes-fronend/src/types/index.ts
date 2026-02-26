@@ -9,7 +9,7 @@ export interface User{
 export interface Note{
     id: string
     title: string
-    content: string
+    content?: string
     createdAt: string
     updatedAt: string
 }
@@ -22,5 +22,5 @@ export interface ApiError{
 // Notes query parameters for filtering and sorting
 export interface NotesQuery{
     search?: string
-    sortBy?: 'created_desc' | 'created_asc' | 'title_desc' | 'title_asc'
+    sortBy?: 'created_desc' | 'created_asc' | 'title_asc' | 'title_desc'
 }

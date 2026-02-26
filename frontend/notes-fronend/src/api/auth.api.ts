@@ -6,6 +6,7 @@ import type { User } from "@/types";
 export const authApi = {
     // Register a new user
     register: (data: { username: string; email: string; password: string }) =>
+        // Pass user data to the API for registration and expect a User object in response
         api.post<User>('/auth/register', data),
 
     // Login a user

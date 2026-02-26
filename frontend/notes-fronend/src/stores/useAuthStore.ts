@@ -38,7 +38,16 @@ export const useAuthStore = defineStore('auth', () => {
           const {data} = await authApi.register({username, email, password})
           user.value = data
         }catch(e: any){
-          error.value = e.response?.data?.message || 'Registration failed.'
+          if(e.response?.status === 400 && e.response?.data?.message){
+            error.value = e.response.data.message
+          }else if(e.response?.status === 422 && e.response?.data?.message === 'The email has already been taken.'){
+            error.value = 'Email already in use.'
+          }else if(e.response?.status === 409){
+            error.value = 'Email already in use.'
+          }
+          else{
+            error.value = 'Registration failed.'
+          }
           throw e
         }finally{
           loading.value = false
@@ -85,6 +94,7 @@ export const useAuthStore = defineStore('auth', () => {
     loading,
     error,
     isAuthenticated,
+    initialized,
     clearError,
     register,
     login,

@@ -107,7 +107,7 @@
   </nav>
 
   <!-- Content -->
-  <main class="notes-content">
+  <main class="notes-content" @click="closeDropdowns">
 
     <!-- Loading -->
     <div v-if="notesStore.loading" class="state-center">
@@ -139,40 +139,105 @@
       <!-- Notes grid -->
       <div class="notes-grid">
         <!-- Add New Note card — always first, hidden when searching -->
+        <button v-if="!notesStore.search" @click="openCreate" class="add-card">
+            <div class="add-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 4v16m8-8H4"/>
+              </svg>
+            </div>
+            <span class="add-card-label">New Note</span>
+          </button>
 
+          <!-- Note cards -->
+          <NoteCard
+            v-for="note in notesStore.filteredNotes"
+            :key="note.id"
+            :note="note"
+            @edit="openEdit"
+            @delete="openDelete"
+          />
       </div>
 
      </div>
 
   </main>
 
+  <!-- Note Modal -->
+  <NoteModal
+    v-if="showModal"
+    :note="editingNote"
+    @close="closeModal"
+    @saved="handleSaved"
+  />
+
+  <!-- Confirm delete -->
+  <ConfirmDialog
+    v-if="deletingNote"
+    title="Delete Note"
+    :message="`Are you sure you want to delete &quot;${deletingNote.title}&quot;? This cannot be undone.`"
+    confirm-label="Delete"
+    @confirm="confirmDelete"
+    @cancel="deletingNote = null"
+  />
+
+
+
+
+  <!-- Toast -->
+  <Transition name="toast">
+    <div v-if="toast" :class="['notes-toast', `notes-toast--${toast.type}`]">
+      <svg v-if="toast.type === 'success'" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8.414 15l-4.121-4.121a1 1 0 011.414-1.414L8.414 12.172l7.879-7.879a1 1 0 011.414 0z" clip-rule="evenodd" />
+      </svg>
+      {{ toast.message }}
+    </div>
+  </Transition>
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useNotesStore } from '@/stores/useNotesStore'
 import { useDebounce } from '@/composables/useDebounce'
 
+import NoteCard from '@/components/notes/NoteCard.vue'
+import NoteModal from '@/components/notes/NoteModal.vue'
+import ConfirmDialog from '@/components/ui/ConfirmDialog.vue'
 
+import type { Note } from '@/types'
 
+// Import global styles
+import '@/assets/NoteView.css'
+
+// define stores and router
 const authStore = useAuthStore()
 const notesStore = useNotesStore()
 const router = useRouter()
 
 
-
+// Create/edit note modal state
+const showModal = ref(false)
+const editingNote = ref<Note | null>(null)
+const deletingNote = ref<Note | null>(null)
 // Dropdown states
 const sortOpen     = ref(false)
 const userOpen     = ref(false)
 
 
+// toast
+const toast = ref<{ message: string; type: 'success' | 'error' } | null>(null)
+let toastTimer: ReturnType<typeof setTimeout> | null = null
 
-
-// Import global styles
-import '@/assets/NoteView.css'
+function showToast(message: string, type: 'success' | 'error' = 'success') {
+  // Set toast message and type
+  if (toastTimer) clearTimeout(toastTimer)
+  // Set toast message and type
+  toast.value = { message, type }
+  toastTimer = setTimeout(() => (toast.value = null), 3000)
+}
 
 
 // user initial for avatar
@@ -202,11 +267,57 @@ function clearSearch(){notesStore.setSearch('')}
 
 
 // function sort
+// to close dropdowns when clicking outside and select sort option
 function closeDropdowns()    { sortOpen.value = false; userOpen.value = false }
+
+// select sort option
 function selectSort(v: string){notesStore.setSortBy(v as any); sortOpen.value = false }
 
 
+// Open create note modal
+function openCreate(){
+  editingNote.value = null
+  showModal.value = true
+}
 
+// Close modal and reset editing note
+function closeModal(){
+  editingNote.value = null
+  showModal.value = false
+}
+
+// Open edit note modal with selected note
+function openEdit(n: Note){
+  editingNote.value = n
+  showModal.value = true
+}
+
+// Open delete confirmation dialog
+function openDelete(n: Note){
+  deletingNote.value = n
+}
+
+// Handel save note
+function handleSaved(action: 'created' | 'updated'){
+  closeModal()
+  showToast(`Note ${action === 'created' ? 'created' : 'updated'} successfully!`)
+}
+
+
+// Confirm delete note
+async function confirmDelete(){
+  // safety check
+  if (!deletingNote.value) return
+  try {
+    const title = deletingNote.value.title
+    await notesStore.deleteNote(deletingNote.value.id)
+    showToast(`"${title}" deleted successfully!`)
+  } catch (e) {
+    showToast('Failed to delete note.', 'error')
+  } finally {
+    deletingNote.value = null
+  }
+}
 
 
 // Logout function

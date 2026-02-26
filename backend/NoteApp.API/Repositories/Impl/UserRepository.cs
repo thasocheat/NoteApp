@@ -28,7 +28,7 @@ public class UserRepository : IUserRepository
         // Create a database connection using the connection factory
         using var conn = _connectionFactory.CreateConnection();
         // Execute a query to retrieve a user by email and return the result
-        return await conn.QuerySingleOrDefaultAsync<User>(
+        return await conn.QueryFirstOrDefaultAsync<User>(
             "SELECT * FROM Users WHERE Email = @Email",
             new { Email = email });
     }
@@ -39,7 +39,7 @@ public class UserRepository : IUserRepository
         // Create a database connection using the connection factory
         using var conn = _connectionFactory.CreateConnection();
         // Execute a query to retrieve a user by username and return the result
-        return await conn.QuerySingleOrDefaultAsync<User>(
+        return await conn.QueryFirstOrDefaultAsync<User>(
             "SELECT * FROM Users WHERE Username = @Username",
             new { Username = username });
     }
@@ -50,7 +50,7 @@ public class UserRepository : IUserRepository
         // Create a database connection using the connection factory
         using var conn = _connectionFactory.CreateConnection();
         // Execute a query to retrieve a user by ID and return the result
-        return await conn.QuerySingleOrDefaultAsync<User>(
+        return await conn.QueryFirstOrDefaultAsync<User>(
             "SELECT * FROM Users WHERE Id = @Id",
             new { Id = id });
     }
@@ -68,7 +68,7 @@ public class UserRepository : IUserRepository
         await conn.ExecuteAsync(
             @"INSERT INTO Users (Id, Username, Email, Password, CreatedAt)
               VALUES (@Id, @Username, @Email, @Password, @CreatedAt)",
-            new { Id = id, user.Username, user.Email, user.Password, user.CreatedAt });
+            new { Id = id, user.Username, user.Email, user.Password, CreatedAt = DateTime.UtcNow });
         return id;
     }
 }
