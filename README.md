@@ -60,7 +60,7 @@ cd frontend/notes-frontend
 npm install && npm run build && npm run dev
 ```
 
-## Option B
+## Option A
 
 1. Docker SQL Server
 2. Install Docker Desktop
@@ -127,7 +127,7 @@ docker start notesapp-sql
 
 
     
-## Option A
+## Option B
 
 1. Clone the project.
 
