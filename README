@@ -1,5 +1,12 @@
 ### Video
 
+## 🎬 Alternative: Create Animated GIFs from Your Videos
+
+For auto-playing demos, convert your MP4 files to GIFs:
+
+**Option 1: Using FFmpeg (Command Line)**
+```bash
+ffmpeg -i part01.mp4 -vf "fps=10,scale=320:-1" -loop 0 demo.gif
 
 
 
