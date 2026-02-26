@@ -2,7 +2,7 @@
   <div class="auth-page">
 
     <!-- Left branding panel (desktop) -->
-     <div class="auth-brand">
+    <div class="auth-brand">
       <div class="auth-brand-inner">
         <img src="@/assets/notes.png" alt="NotesApp Logo" class="auth-brand-logo" />
         <h1 class="auth-brand-title">Your ideas,<br/>Your notes</h1>
@@ -29,15 +29,14 @@
 
 
     <!-- Right form panel -->
-     <div class="auth-from-panel">
+    <div class="auth-form-panel">
 
       <!-- Mobile logo -->
       <div class="auth-mobile-logo">
-        <img src="@/assets/notes.png" alt="NotesApp Logo" class="auth-mobile-logo-img" />
-        <span class="auth-mobile-logo-title">NotesApp</span>
+        <img src="@/assets/notes.png" alt="NotesApp" class="auth-mobile-logo-img" />
+        <span class="auth-mobile-logo-text">NotesApp</span>
       </div>
 
-      <!-- Card form -->
       <div class="auth-card">
 
         <!-- Tab switcher -->
@@ -45,8 +44,7 @@
           <button
             v-for="tab in tabs"
             :key="tab.key" @click="switchTab(tab.key)"
-            :class="['auth-tab-btn', activeTab === tab.key ? 'auth-tab-btn--active' : '']"
-          >
+            :class="['auth-tab-btn', activeTab === tab.key ? 'auth-tab-btn--active' : '']">
             {{ tab.label }}
           </button>
         </div>
@@ -148,9 +146,12 @@
         </Transition>
 
       </div>
-     </div>
+    </div>
+
   </div>
 </template>
+
+
 
 
 
