@@ -1,4 +1,4 @@
-/* Page Layout */
+/* Page Layout  */
 .auth-page {
   display: flex;
   min-height: 100vh;
@@ -28,7 +28,6 @@
 .auth-brand-logo   { width: 96px; height: 96px; object-fit: contain; margin: 0 auto 1.75rem; filter: drop-shadow(0 8px 32px rgba(0,0,0,0.25)); }
 .auth-brand-title  { font-size: 2rem; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 1rem; }
 .auth-brand-desc   { font-size: 1rem; color: rgba(255,255,255,0.75); line-height: 1.65; margin-bottom: 2.5rem; }
-
 .auth-feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 .auth-features {
   display: grid;
@@ -102,13 +101,23 @@
 .auth-feature-name  { font-size: 0.875rem; font-weight: 700; color: #fff; }
 .auth-feature-desc  { font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 0.125rem; }
 
+/* ─── Right form panel ───────────────────────────────────── */
+.auth-form-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f9fafb;
+  padding: 2.5rem 1.5rem;
+  min-height: 100vh;
+}
 
 /* Mobile logo */
 .auth-mobile-logo      { display: flex; flex-direction: column; align-items: center; margin-bottom: 2rem; }
 .auth-mobile-logo-img  { width: 56px; height: 56px; object-fit: contain; }
 .auth-mobile-logo-text { font-size: 1.375rem; font-weight: 800; color: #1e1b4b; margin-top: 0.5rem; letter-spacing: -0.5px; }
 @media (min-width: 1024px) { .auth-mobile-logo { display: none; } }
-
 
 /* Card */
 .auth-card {
@@ -119,7 +128,6 @@
   width: 100%;
   max-width: 440px;
 }
-
 
 /* Tabs */
 .auth-tabs {
@@ -144,7 +152,6 @@
 }
 .auth-tab-btn:hover { color: #374151; }
 .auth-tab-btn--active { background: #fff; color: #4f46e5; box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
-
 
 /* Error */
 .auth-error {
@@ -176,3 +183,54 @@
 .auth-input:hover  { border-color: #d1d5db; }
 .auth-input:focus  { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); background: #fff; }
 .auth-input::placeholder { color: #d1d5db; }
+
+/* Password strength */
+.auth-strength-bar { display: flex; gap: 0.25rem; margin-top: 0.5rem; height: 4px; }
+.auth-strength-seg {
+  flex: 1; height: 100%; border-radius: 9999px;
+  background: #e5e7eb; transition: background 0.3s;
+}
+.auth-strength-seg--weak   { background: #ef4444; }
+.auth-strength-seg--ok     { background: #f59e0b; }
+.auth-strength-seg--strong { background: #10b981; }
+
+/* Submit button */
+.auth-submit-btn {
+  width: 100%;
+  padding: 0.9375rem 1rem;
+  background: linear-gradient(135deg, #4f46e5, #6d28d9);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 14px rgba(79,70,229,0.35);
+  margin-top: 0.5rem;
+  margin-bottom: 1.25rem;
+  font-family: inherit;
+}
+.auth-submit-btn:hover:not(:disabled) { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,70,229,0.4); }
+.auth-submit-btn:active:not(:disabled) { transform: translateY(0); }
+.auth-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.auth-spinner {
+  width: 1.125rem; height: 1.125rem;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Switch link */
+.auth-switch      { text-align: center; font-size: 0.875rem; color: #6b7280; }
+.auth-switch-link { background: none; border: none; color: #4f46e5; font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; font-family: inherit; font-size: inherit; }
+.auth-switch-link:hover { color: #4338ca; }
+
+/* Transitions */
+.fade-slide-enter-active, .fade-slide-leave-active { transition: opacity 0.2s ease, transform 0.2s ease; }
+.fade-slide-enter-from  { opacity: 0; transform: translateY(10px); }
+.fade-slide-leave-to    { opacity: 0; transform: translateY(-10px); }
+.slide-down-enter-active, .slide-down-leave-active { transition: opacity 0.2s ease; overflow: hidden; }
+.slide-down-enter-from  { opacity: 0; }
+.slide-down-leave-to    { opacity: 0; }

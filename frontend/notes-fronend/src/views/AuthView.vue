@@ -53,12 +53,16 @@
 
         <!-- Error banner -->
         <Transition name="slide-down">
-
+          <div v-if="authStore.error" class="auth-error">
+            {{ authStore.error }}
+          </div>
         </Transition>
 
-        <!-- Login form -->
+        <!-- Login and Register form -->
         <Transition name="fade-slide" mode="out-in">
-          <form v-if="activeTab == 'login'" key="login">
+
+          <!-- Login -->
+          <form v-if="activeTab == 'login'" key="login" @submit.prevent="handleLogin">
 
             <!-- Header -->
             <div class="auth-form-header">
@@ -69,29 +73,82 @@
             <!-- Fields -->
             <div class="auth-field">
               <label class="auth-label">Email address</label>
-              <input type="email" placeholder="you@example.com" class="auth-input" />
+              <input v-model="loginForm.email" type="email" required autocomplete="email"
+                placeholder="you@example.com" class="auth-input" />
             </div>
 
             <div class="auth-field">
               <label for="password" class="auth-label">Password</label>
-              <input type="password" placeholder="••••••••" class="auth-input" />
+              <input v-model="loginForm.password" type="password" required autocomplete="current-password"
+                placeholder="••••••••" class="auth-input" />
             </div>
 
             <!-- Button login -->
-            <button type="submit" class="auth-submit-btn">Login</button>
+            <button type="submit" :disabled="authStore.loading" class="auth-submit-btn">
+              <svg v-if="authStore.loading" class="auth-spinner" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+              {{ authStore.loading ? 'Signing in…' : 'Sign In' }}
+            </button>
             <p class="auth-switch">
               Don't have an account?
-              <button @click="switchTab('register')">Register</button>
+              <button type="button" @click="switchTab('register')" class="auth-switch-link">Register</button>
+            </p>
+
+          </form>
+
+          <!-- Register -->
+          <form v-else key="register" @submit.prevent="handleRegister()">
+
+            <!-- Header -->
+            <div class="auth-form-header">
+              <h2 class="auth-form-title">Create Account</h2>
+              <p class="auth-form-desc">Register to get started</p>
+            </div>
+
+            <!-- Fields -->
+            <div class="auth-field">
+              <label class="auth-label">Username</label>
+              <input v-model="registerForm.username" type="text" required autocomplete="username"
+                placeholder="yourname" class="auth-input" />
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label">Email address</label>
+              <input v-model="registerForm.email" type="email" required autocomplete="email"
+                placeholder="you@example.com" class="auth-input" />
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label">Password</label>
+              <input v-model="registerForm.password" type="password" required autocomplete="new-password"
+                placeholder="••••••••" class="auth-input" />
+            </div>
+
+            <!-- password strength bar -->
+            <div class="auth-strength-bar">
+              <div v-for="i in 4" :key="i" :class="['auth-strength-seg', strengthClass(i)]" />
+            </div>
+
+            <!-- Button register -->
+            <button type="submit" :disabled="authStore.loading" class="auth-submit-btn">
+              <svg v-if="authStore.loading" class="auth-spinner" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+              </svg>
+              {{ authStore.loading ? 'Creating account…' : 'Create Account' }}
+            </button>
+            <p class="auth-switch">
+              Already have an account?
+              <button type="button" @click="switchTab('login')" class="auth-switch-link">Sign in</button>
             </p>
 
           </form>
         </Transition>
 
       </div>
-
-
      </div>
-    
   </div>
 </template>
 
@@ -99,12 +156,18 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 
 import searchIcon from '@/assets/search.png'
 import syncIcon from '@/assets/sync.png'
 import secureIcon from '@/assets/secure.png'
 import responsiveIcon from '@/assets/responsive.png'
+
+// define router and auth store
+const router = useRouter()
+const authStore = useAuthStore()
 
 // Import global styles
 import '@/assets/AuthView.css'
@@ -125,11 +188,65 @@ const tabs = [
 ] as const
 
 const activeTab = ref<'login' | 'register'>('login')
+const loginForm    = reactive({ email: '', password: '' })
+const registerForm = reactive({
+  username: '',
+  email: '',
+  password: '',
+})
 
 
 // switch between login and register
 function switchTab(tab: 'login' | 'register'){
+  authStore.clearError()
   activeTab.value = tab
+}
+
+// handle login
+async function handleLogin() {
+  authStore.clearError()
+  try {
+    await authStore.login(loginForm.email, loginForm.password)
+    router.push('/notes')
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+
+// handle register
+async function handleRegister(){
+  authStore.clearError()
+  try{
+    await authStore.register(registerForm.username, registerForm.email, registerForm.password)
+    router.push('/notes')
+  }catch(e){
+    console.error(e)
+  }
+}
+
+// compute password strength (0-4)
+const passwordStrength = computed(() => {
+  // strength criteria: length >= 6, has uppercase, has number, has special char
+  const p = registerForm.password
+  if (!p) return 0
+  let s = 0
+  if (p.length >= 6) s++
+  if (/[A-Z]/.test(p)) s++
+  if (/[0-9]/.test(p)) s++
+  if (/[^A-Za-z0-9]/.test(p)) s++
+  return s
+})
+
+// return css class for strength bar segment
+function strengthClass(level: number) {
+
+  // if password is empty or doesn't meet strength level, return empty (gray)
+  if (!registerForm.password) return ''
+  if (passwordStrength.value < level) return ''
+  if (passwordStrength.value <= 2) return 'auth-strength-seg--weak'
+  if (passwordStrength.value === 3) return 'auth-strength-seg--ok'
+  return 'auth-strength-seg--strong'
 }
 
 </script>
