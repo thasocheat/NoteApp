@@ -1,9 +1,9 @@
---- ========== ---
+--- ========== ------ ========== ------ ========== ------ ========== ------ ========== ---
 -- NotesAppDbDb Migration Script
 -- Run it while connected to any database
 -- This script will create the NotesAppDb database and tables if they do not exist
 -- We using Docker / SQL Server with (mssql) extension in VS Code
---- ========== ---
+--- ========== ------ ========== ------ ========== ------ ========== ------ ========== ---
 
 -- Create the NotesAppDb database if it does not exist
 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'NotesAppDb')
