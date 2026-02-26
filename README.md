@@ -6,6 +6,10 @@
 
 ![Watch Demo Part02](https://github.com/user-attachments/assets/146fd7bb-9089-444f-a90e-ce1ee5b754d7)
 
+Or
+
+![Releases Demo-Videos](https://github.com/thasocheat/NoteApp/releases/tag/Demo-Videos)
+
 ---
 
 ### Screenshots
