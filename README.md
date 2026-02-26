@@ -40,11 +40,11 @@ Or
 ## Getting Started
 ## NuGet Packages Installed (Backend: framework net8.0)
 ```bash
-dotnet add package Dapper
-dotnet add package BCrypt.Net-Next
-dotnet add package Microsoft.Data.SqlClient
-dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.13
-dotnet add package System.IdentityModel.Tokens.Jwt --version 8.0.2
+dotnet add package Dapper &&
+dotnet add package BCrypt.Net-Next &&
+dotnet add package Microsoft.Data.SqlClient &&
+dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.13 &&
+dotnet add package System.IdentityModel.Tokens.Jwt --version 8.0.2 &&
 ```
 
 1. Run
@@ -67,23 +67,17 @@ npm install && npm run build && npm run dev
 3. Verify in terminal:
    ```bash
    docker --version
-   # Docker version 24.x.x
    ```
 4. Pull and run SQL Server in Docker
 5. Open a terminal (PowerShell or CMD) and run:
 
 ```bash
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=YourStrongPWS" \
-  -p 1433:1433 \
-  --name notesapp-sql \
-  --hostname notesapp-sql \
-  -d mcr.microsoft.com/mssql/server:2022-latest
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=YourStrongPWS" -p 1433:1433 --name notesapp-sql -d mcr.microsoft.com/mssql/server:2022-latest
 ```
 
 6. Verify container is running
 ```bash
 docker ps
-# You should see notesapp-sql with status "Up"
 ```
 
 7. If the container already exists (every day use)
