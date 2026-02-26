@@ -104,7 +104,7 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 .state-text  { font-size: 0.9375rem; color: #4b5563; }
 .retry-btn   { background: none; border: none; color: #4f46e5; font-weight: 700; cursor: pointer; font-size: 0.875rem; text-decoration: underline; font-family: inherit; }
-.state-emoji { font-size: 2.75rem; background: #eef2ff; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.state-emoji { font-size: 2.75rem; background: #fffcee; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 .state-title { font-size: 1.125rem; font-weight: 700; color: #1f2937; }
 .state-desc  { font-size: 0.9rem; color: #9ca3af; max-width: 280px; line-height: 1.55; }
 

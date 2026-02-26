@@ -2,7 +2,8 @@
   <div class="notes-page">
 
     <!-- Navbar -->
-    <!-- brand + controls -->
+    <nav class="notes-nav">
+      <!-- brand + controls -->
     <div class="nav-row1">
 
       <!-- Brand -->
@@ -82,14 +83,78 @@
 
     </div>
 
+    <!-- Search bar -->
+    <div class="nav-row2">
+      <div class="nav-search-wrap">
+        <svg class="nav-search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z" />
+        </svg>
+        <input
+          :value="notesStore.search"
+          @input="onSearch"
+          type="text"
+          placeholder="Search your notes…"
+          class="nav-search-input"
+        />
+        <button v-if="notesStore.search" @click="clearSearch" class="nav-search-clear" aria-label="Clear">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </nav>
+
+  <!-- Content -->
+  <main class="notes-content">
+
+    <!-- Loading -->
+    <div v-if="notesStore.loading" class="state-center">
+      <svg class="state-spinner" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+      </svg>
+      <span class="state-text">Loading your notes…</span>
+    </div>
+
+    <!-- Error -->
+    <div v-else-if="notesStore.error" class="state-center">
+      <div class="state-emoji">⚠️</div>
+      <p class="state-text">{{ notesStore.error }}</p>
+      <button @click="notesStore.fetchNotes()" class="retry-btn">Try again</button>
+    </div>
+
+    <!-- Notes grid (alway shown includes Add card) -->
+     <div>
+
+      <!-- Grid header -->
+      <div class="grid-header" v-if="notesStore.filteredNotes.length > 0 || notesStore.search">
+        <h2 class="grid-header-title">
+          {{ notesStore.search ? `Results for "${notesStore.search}"` : 'All Notes' }}
+        </h2>
+        <span class="grid-header-badge">{{ notesStore.filteredNotes.length }} {{ notesStore.filteredNotes.length === 1 ? 'note' : 'notes' }}</span>
+      </div>
+      
+      <!-- Notes grid -->
+      <div class="notes-grid">
+        <!-- Add New Note card — always first, hidden when searching -->
+
+      </div>
+
+     </div>
+
+  </main>
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { useNotesStore } from '@/stores/useNotesStore'
+import { useDebounce } from '@/composables/useDebounce'
 
 
 
@@ -129,6 +194,12 @@ const activeSortLabel = computed(
 
 
 
+// search input handler
+const debouncedSearch = useDebounce((val: string) => notesStore.setSearch(val), 300)
+function onSearch(e: Event){debouncedSearch((e.target as HTMLInputElement).value)}
+// Clear search input
+function clearSearch(){notesStore.setSearch('')}
+
 
 // function sort
 function closeDropdowns()    { sortOpen.value = false; userOpen.value = false }
@@ -143,4 +214,8 @@ async function handleLogout(){
   await authStore.logout()
   router.push('/auth')
 }
+
+// fetch notes and set up reactivity on mount
+// to ensure notes are loaded when user visits the page and react to changes in the store
+onMounted(() => notesStore.fetchNotes())
 </script>

@@ -47,6 +47,26 @@ export const useNotesStore = defineStore('notes', () => {
 
     }
 
+    // Create, update, delete functions
+    async function createNote(title: string, content?: string) {
+        const { data } = await notesApi.create({ title, content })
+        notes.value.unshift(data)
+        return data
+    }
+
+    async function updateNote(id: string, title: string, content?: string) {
+        const { data } = await notesApi.update(id, { title, content })
+        const idx = notes.value.findIndex((n) => n.id === id)
+        if (idx !== -1) notes.value[idx] = data
+        return data
+    }
+
+    async function deleteNote(id: string) {
+        await notesApi.delete(id)
+        notes.value = notes.value.filter((n) => n.id !== id)
+    }
+    // End of create, update, delete functions
+
 
 
     function setSearch(q: string) {search.value = q}
@@ -66,5 +86,9 @@ export const useNotesStore = defineStore('notes', () => {
         fetchNotes,
         setSearch,
         setSortBy,
+        createNote,
+        updateNote,
+        deleteNote
+        
     }
 })
